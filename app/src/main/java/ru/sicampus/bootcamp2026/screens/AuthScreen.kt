@@ -61,7 +61,7 @@ fun AuthScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         AuthButton("Войти") {
-
+            navHostController.navigate(Routes.Home.route)
         }
 
         Spacer(modifier = Modifier.height(50.dp))
