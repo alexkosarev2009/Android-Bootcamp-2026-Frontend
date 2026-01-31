@@ -33,7 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import ru.sicampus.bootcamp2026.Navigation.NavBar
+import ru.sicampus.bootcamp2026.Navigation.Routes
 
 @Composable
 fun ScheduleScreen(navController: NavHostController) {
@@ -45,71 +54,91 @@ fun ScheduleScreen(navController: NavHostController) {
             NavBar(navController = navController)
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(padding)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(30.dp))
-
-                Text(
-                    text = "Расписание",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
-                
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Табы
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .systemBarsPadding()
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TabItem("день", selectedTab == "день") { selectedTab = "день" }
-                    TabItem("неделя", selectedTab == "неделя") { selectedTab = "неделя" }
-                    TabItem("месяц", selectedTab == "месяц") { selectedTab = "месяц" }
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    Text(
+                        text = "Расписание",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    // Табы
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TabItem("день", selectedTab == "день") { selectedTab = "день" }
+                        TabItem("неделя", selectedTab == "неделя") { selectedTab = "неделя" }
+                        TabItem("месяц", selectedTab == "месяц") { selectedTab = "месяц" }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Область со списком
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant, 
+                            RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                        )
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp)
+                        .padding(top = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    ScheduleCard("Название1", "Организатор1", "17.08.2026", "17:00")
+                    ScheduleCard("Название2", "Организатор2", "17.08.2026", "18:00")
+                    ScheduleCard("Название3", "Организатор3", "18.08.2026", "12:00")
+                    
+                    if (selectedTab != "день") {
+                        ScheduleCard("Название4", "Организатор4", "19.08.2026", "10:00")
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
 
-            // Серая область со списком
-            Column(
+            // Кнопка выхода
+            IconButton(
+                onClick = { 
+                    navController.navigate(Routes.Auth.route) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .align(Alignment.TopEnd)
+                    .padding(top = 16.dp, end = 16.dp)
             ) {
-                ScheduleCard("Название1", "Организатор1", "17.08.2026", "17:00")
-                ScheduleCard("Название2", "Организатор2", "17.08.2026", "18:00")
-                ScheduleCard("Название3", "Организатор3", "18.08.2026", "12:00")
-                
-                if (selectedTab != "день") {
-                    ScheduleCard("Название4", "Организатор4", "19.08.2026", "18:00")
-                    ScheduleCard("Название5", "Организатор5", "20.08.2026", "14:00")
-                    ScheduleCard("Название6", "Организатор6", "21.08.2026", "16:00")
-                }
-                
-                if (selectedTab == "месяц") {
-                    ScheduleCard("Название7", "Организатор7", "25.08.2026", "10:00")
-                    ScheduleCard("Название8", "Организатор8", "27.08.2026", "11:00")
-                    ScheduleCard("Название9", "Организатор9", "30.08.2026", "15:00")
-                }
-                
-                Spacer(modifier = Modifier.height(20.dp))
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Выход",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(28.dp)
+                )
             }
         }
     }
@@ -133,8 +162,9 @@ fun ScheduleCard(title: String, organizer: String, date: String, time: String) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(15.dp),
-        color = Color.White,
-        border = BorderStroke(1.dp, Color.LightGray)
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        shadowElevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -142,18 +172,29 @@ fun ScheduleCard(title: String, organizer: String, date: String, time: String) {
             Text(
                 text = title, 
                 fontSize = 20.sp, 
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
             )
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            Text(text = "Организатор: $organizer", fontSize = 14.sp)
-            Text(text = "Дата: $date", fontSize = 14.sp)
-            Text(text = "Время: $time", fontSize = 14.sp)
-
-
+            Text(
+                text = "Организатор: $organizer", 
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            )
+            Text(
+                text = "Дата: $date", 
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            )
+            Text(
+                text = "Время: $time", 
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            )
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -27,8 +28,8 @@ fun MainField(
         modifier = modifier
             .fillMaxWidth()
             .height(45.dp)
-            .background(Color(0xFFE0E0E0), RoundedCornerShape(25.dp))
-            .border(1.dp, Color.Black, RoundedCornerShape(25.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(25.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(25.dp))
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
@@ -37,20 +38,26 @@ fun MainField(
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 if (value.isEmpty()) {
-                    Text(text = placeholder, color = Color.Gray, fontSize = 16.sp)
+                    Text(
+                        text = placeholder,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 16.sp
+                    )
                 }
                 BasicTextField(
                     value = value,
                     onValueChange = onValueChange,
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface)
                 )
             }
             if (trailingIcon != null) {
                 Icon(
                     imageVector = trailingIcon,
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

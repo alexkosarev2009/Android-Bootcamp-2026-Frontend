@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,7 +33,6 @@ import ru.sicampus.bootcamp2026.Navigation.Routes
 import ru.sicampus.bootcamp2026.components.SimpleButton
 import ru.sicampus.bootcamp2026.components.SimpleTextField
 import ru.sicampus.bootcamp2026.components.RefText
-import ru.sicampus.bootcamp2026.components.SimpleHeader
 import ru.sicampus.bootcamp2026.ui.theme.AndroidBootcamp2026FrontendTheme
 
 @Composable
@@ -48,7 +48,14 @@ fun AuthScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        SimpleHeader("Авторизация")
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Text(
+            text = "Авторизация",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
 
         Spacer(modifier = Modifier.height(50.dp))
 
@@ -58,17 +65,13 @@ fun AuthScreen(
                 Image(
                     imageVector = Icons.Default.Email,
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground
-                    )
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                 )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        ) {
-            Text("example@gmail.com", color = Color.Gray)
-        }
+        )
 
         Spacer(modifier = Modifier.height(25.dp))
-
 
         SimpleTextField(
             label = "Пароль",
@@ -77,17 +80,16 @@ fun AuthScreen(
                     imageVector = Icons.Default.Lock,
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                    )
+                )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        ) {
-            Text("")
-        }
+        )
+
         Spacer(modifier = Modifier.height(50.dp))
 
         SimpleButton("Войти") {
             navHostController.navigate(Routes.Home.route) {
-                popUpTo(0)
+                popUpTo(Routes.Auth.route) { inclusive = true }
             }
         }
 

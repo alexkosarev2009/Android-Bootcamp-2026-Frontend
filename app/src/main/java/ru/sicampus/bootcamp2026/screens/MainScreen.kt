@@ -27,9 +27,6 @@ import ru.sicampus.bootcamp2026.components.SimpleTextField
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    val cyanColor = Color(0xFF80F9F9)
-    val lightGray = Color(0xFFE0E0E0)
-
     Scaffold(
         bottomBar = {
             NavBar(navController = navController)
@@ -37,88 +34,103 @@ fun MainScreen(navController: NavHostController) {
         modifier = Modifier
             .statusBarsPadding()
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(30.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(30.dp))
 
-            Text(
-                text = "Создание встречи",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Medium
-            )
+                Text(
+                    text = "Создание встречи",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
 
-            Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
-            SimpleTextField(
-                label = "Название встречи",
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(modifier = Modifier) {
                 SimpleTextField(
-                    label = "Дата встречи",
+                    label = "Название встречи",
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    SimpleTextField(
+                        label = "Дата встречи",
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    SimpleTextField(
+                        label = "Время встречи",
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = "Приглашения",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SimpleTextField(
+                    label = "Поиск",
+                    modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = ""
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 )
-                SimpleTextField(
-                    label = "Время встречи",
-                )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Приглашения",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Medium
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            SimpleTextField(
-                label = "Поиск",
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null
-                    )
+                SimpleButton("Создать встречу") {
                 }
-            )
+                
+                Spacer(modifier = Modifier.height(24.dp))
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text("Список приглашённых", fontSize = 14.sp, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .background(lightGray, RoundedCornerShape(15.dp))
-                        .border(1.dp, Color.Black, RoundedCornerShape(15.dp))
+            IconButton(
+                onClick = { 
+                    navController.navigate(Routes.Auth.route) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 16.dp, end = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Выход",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(28.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            SimpleButton(
-                text = "Отправить приглашения"
-            ) {
-
-            }
-
         }
     }
 }

@@ -25,83 +25,105 @@ import androidx.navigation.compose.rememberNavController
 import ru.sicampus.bootcamp2026.Navigation.NavBar
 import ru.sicampus.bootcamp2026.Navigation.Routes
 import ru.sicampus.bootcamp2026.components.SimpleButton
-import ru.sicampus.bootcamp2026.ui.theme.LightRed
 
 @Composable
 fun InvitingScreen(navController: NavHostController) {
-    val cyanColor = Color(0xFF80F9F9)
-    val lightGray = Color(0xFFE0E0E0)
-    val redColor = Color(0xFFF96060)
-    val blueColor = Color(0xFF00C2FF)
-
     Scaffold(
         bottomBar = {
             NavBar(navController = navController)
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(padding)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(30.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .systemBarsPadding()
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(30.dp))
 
-                Text(
-                    text = "У вас новые приглашения",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
-                
-                Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = "Новые приглашения",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceVariant, 
+                            RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                        )
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp)
+                        .padding(top = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    InvitationCard(
+                        title = "Название1",
+                        organizer = "Организатор1",
+                        date = "17.08.2026",
+                        time = "17:00",
+                    )
+                    
+                    InvitationCard(
+                        title = "Название2",
+                        organizer = "Организатор2",
+                        date = "17.08.2026",
+                        time = "18:00",
+                    )
+
+                    InvitationCard(
+                        title = "Название3",
+                        organizer = "Организатор3",
+                        date = "18.08.2026",
+                        time = "10:00",
+                    )
+
+                    InvitationCard(
+                        title = "Название4",
+                        organizer = "Организатор4",
+                        date = "19.08.2026",
+                        time = "14:00",
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
 
-            Column(
+            // Кнопка выхода
+            IconButton(
+                onClick = { 
+                    navController.navigate(Routes.Auth.route) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(lightGray, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .align(Alignment.TopEnd)
+                    .padding(top = 16.dp, end = 16.dp)
             ) {
-                InvitationCard(
-                    title = "Название1",
-                    organizer = "Организатор1",
-                    date = "17.08.2026",
-                    time = "17:00",
+                Icon(
+                    imageVector = Icons.Default.ExitToApp,
+                    contentDescription = "Выход",
+                    tint = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.size(28.dp)
                 )
-                
-                InvitationCard(
-                    title = "Название2",
-                    organizer = "Организатор2",
-                    date = "17.08.2026",
-                    time = "18:00",
-                )
-
-                InvitationCard(
-                    title = "Название3",
-                    organizer = "Организатор3",
-                    date = "18.08.2026",
-                    time = "10:00",
-                )
-
-                InvitationCard(
-                    title = "Название4",
-                    organizer = "Организатор4",
-                    date = "19.08.2026",
-                    time = "14:00",
-                )
-                
-                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
@@ -117,21 +139,39 @@ fun InvitationCard(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(15.dp),
-        color = Color.White,
-        border = BorderStroke(1.dp, Color.LightGray)
+        color = MaterialTheme.colorScheme.surface,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        shadowElevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = title, 
+                fontSize = 20.sp, 
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
             
             Spacer(modifier = Modifier.height(8.dp))
             
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Организатор: $organizer", fontSize = 14.sp)
-                Text(text = "Дата: $date", fontSize = 14.sp)
-                Text(text = "Время: $time", fontSize = 14.sp)
+                Text(
+                    text = "Организатор: $organizer", 
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+                Text(
+                    text = "Дата: $date", 
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+                Text(
+                    text = "Время: $time", 
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -146,7 +186,7 @@ fun InvitationCard(
                 
                 SimpleButton("Отклонить",
                     modifier = Modifier.weight(1f),
-                    color = LightRed
+                    color = MaterialTheme.colorScheme.error // Using theme error color for "Decline"
                 ) { }
             }
         }

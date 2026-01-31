@@ -12,6 +12,9 @@ val Pink40 = Color(0xFF7D5260)
 
 val accentLight = Color(0xFF47FFFA)
 val accentDark = Color(0xFF1F9EFF)
-val cyanColor = Color(0xFF80F9F9)
-val secondaryLight = Color(0xFF9FCEFF)
-val LightRed = Color(0xFFF96060)
+
+val CyanApp = Color(0xFF80F9F9)
+val BlueApp = Color(0xFF00C2FF)
+val RedApp = Color(0xFFF96060)
+val LightGrayApp = Color(0xFFE0E0E0)
+val DarkGrayApp = Color(0xFF303030)

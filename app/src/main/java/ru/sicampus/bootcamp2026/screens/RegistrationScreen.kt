@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,14 @@ fun RegistrationScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        SimpleHeader("Регистрация")
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Text(
+            text = "Регистрация",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
 
         Spacer(modifier = Modifier.height(50.dp))
 
@@ -64,10 +72,7 @@ fun RegistrationScreen(
                 )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii)
-
-        ) {
-            Text("Иванов Иван Иванович", color = Color.Gray)
-        }
+        )
 
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -82,9 +87,7 @@ fun RegistrationScreen(
                 )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        ) {
-            Text("example@gmail.com", color = Color.Gray)
-        }
+        )
 
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -99,15 +102,14 @@ fun RegistrationScreen(
                 )
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-
-        ) {
-
-        }
+        )
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        SimpleButton("Зарегистрироваться") {
-
+        SimpleButton("Создать аккаунт") {
+            navHostController.navigate(Routes.Home.route) {
+                popUpTo(Routes.Auth.route) { inclusive = true }
+            }
         }
 
         Spacer(modifier = Modifier.height(50.dp))
@@ -121,7 +123,7 @@ fun RegistrationScreen(
                 text = "Авторизуйтесь",
                 onClick = {
                     navHostController.navigate(Routes.Auth.route) {
-                        popUpTo(0)
+                        popUpTo(Routes.Registration.route) { inclusive = true }
                     }
                 }
             )
