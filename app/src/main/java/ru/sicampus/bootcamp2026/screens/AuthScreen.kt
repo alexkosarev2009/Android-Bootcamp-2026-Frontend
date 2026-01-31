@@ -1,33 +1,38 @@
 package ru.sicampus.bootcamp2026.screens
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import ru.sicampus.bootcamp2026.Navigation.Routes
+import ru.sicampus.bootcamp2026.components.SimpleButton
+import ru.sicampus.bootcamp2026.components.SimpleTextField
+import ru.sicampus.bootcamp2026.components.RefText
+import ru.sicampus.bootcamp2026.components.SimpleHeader
 import ru.sicampus.bootcamp2026.ui.theme.AndroidBootcamp2026FrontendTheme
 
 @Composable
@@ -36,7 +41,10 @@ fun AuthScreen(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .systemBarsPadding()
+            .imePadding()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -44,8 +52,17 @@ fun AuthScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        AuthField(
-            label = "Электронная почта"
+        SimpleTextField(
+            label = "Электронная почта",
+            leadingIcon = {
+                Image(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground
+                    )
+                )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         ) {
             Text("example@gmail.com", color = Color.Gray)
         }
@@ -53,15 +70,25 @@ fun AuthScreen(
         Spacer(modifier = Modifier.height(25.dp))
 
 
-        AuthField(
-            label = "Пароль"
+        SimpleTextField(
+            label = "Пароль",
+            leadingIcon = {
+                Image(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         ) {
             Text("")
         }
         Spacer(modifier = Modifier.height(50.dp))
 
-        AuthButton("Войти") {
-            navHostController.navigate(Routes.Home.route)
+        SimpleButton("Войти") {
+            navHostController.navigate(Routes.Home.route) {
+                popUpTo(0)
+            }
         }
 
         Spacer(modifier = Modifier.height(50.dp))
@@ -78,81 +105,15 @@ fun AuthScreen(
                 }
             )
         }
-        
 
 
     }
-
-
-}
-
-@Composable
-fun AuthField(
-    label: String,
-    placeholder: @Composable () -> Unit
-) {
-    var textState by remember { mutableStateOf("") }
-    OutlinedTextField(
-        value = textState,
-        onValueChange = {
-            textState = it
-        },
-        shape = RoundedCornerShape(15.dp),
-        label = {
-            Text(
-                text = label,
-                fontSize = 16.sp
-            )
-        },
-        placeholder = placeholder,
-        singleLine = true
-
-    )
-}
-
-@Composable
-fun AuthButton(
-    text: String,
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .height(50.dp)
-            .widthIn(min = 150.dp, max = 250.dp),
-        shape = RoundedCornerShape(20.dp)
-    ) {
-        Text(text, fontSize = 16.sp)
-    }
-}
-
-@Composable
-fun SimpleHeader(
-    text: String
-) {
-    Text(
-        text = text,
-        fontSize = 25.sp
-    )
-}
-
-@Composable
-fun RefText(fontSize: TextUnit = 16.sp, text: String, onClick: () -> Unit) {
-    Text(
-        text = text,
-        fontSize = fontSize,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.clickable(
-            onClick = onClick
-        ),
-        textDecoration = TextDecoration.Underline,
-    )
 }
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun PreviewAuthScreen() {
     AndroidBootcamp2026FrontendTheme {
-//        AuthScreen()
+        AuthScreen(rememberNavController())
     }
 }

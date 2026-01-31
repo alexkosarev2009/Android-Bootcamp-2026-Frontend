@@ -2,16 +2,27 @@ package ru.sicampus.bootcamp2026.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,69 +31,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import ru.sicampus.bootcamp2026.Navigation.Routes
+import ru.sicampus.bootcamp2026.Navigation.NavBar
 
 @Composable
-fun ScheduleScreen(navController: NavController) {
-    val cyanColor = Color(0xFF80F9F9)
-    val lightGray = Color(0xFFE0E0E0)
-    val blueColor = Color(0xFF00C2FF)
-    
+fun ScheduleScreen(navController: NavHostController) {
+
     var selectedTab by remember { mutableStateOf("неделя") }
 
     Scaffold(
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(cyanColor)
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = { navController.navigate(Routes.Profile.route) },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(Icons.Default.AccountCircle, contentDescription = "Профиль", modifier = Modifier.size(32.dp))
-                }
-                IconButton(
-                    onClick = { 
-                        navController.navigate(Routes.Auth.route) {
-                            popUpTo(0)
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(Icons.Default.Logout, contentDescription = "Выход", modifier = Modifier.size(32.dp))
-                }
-            }
-        },
         bottomBar = {
-            NavigationBar(
-                containerColor = lightGray,
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.Invitations.route) },
-                    icon = { Icon(Icons.Default.Mail, contentDescription = null) },
-                    label = { Text("Приглашения") }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.Home.route) },
-                    icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                    label = { Text("Главная") }
-                )
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { /* Текущий экран */ },
-                    icon = { Icon(Icons.Default.DateRange, contentDescription = null, tint = blueColor) },
-                    label = { Text("Расписание", color = blueColor) }
-                )
-            }
+            NavBar(navController = navController)
         }
     ) { padding ->
         Column(
@@ -127,7 +87,7 @@ fun ScheduleScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(lightGray, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
+                    .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp))
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 24.dp)
                     .padding(top = 16.dp),
@@ -160,7 +120,7 @@ fun TabItem(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Text(
         text = text,
         fontSize = 18.sp,
-        color = if (isSelected) Color(0xFF00C2FF) else Color.Black,
+        color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
         modifier = Modifier
             .clickable { onClick() }
             .padding(8.dp),
@@ -192,6 +152,8 @@ fun ScheduleCard(title: String, organizer: String, date: String, time: String) {
             Text(text = "Организатор: $organizer", fontSize = 14.sp)
             Text(text = "Дата: $date", fontSize = 14.sp)
             Text(text = "Время: $time", fontSize = 14.sp)
+
+
         }
     }
 }

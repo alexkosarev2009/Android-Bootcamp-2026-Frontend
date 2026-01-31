@@ -18,72 +18,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import ru.sicampus.bootcamp2026.Navigation.NavBar
 import ru.sicampus.bootcamp2026.Navigation.Routes
-import ru.sicampus.bootcamp2026.components.MainField
+import ru.sicampus.bootcamp2026.components.SimpleButton
+import ru.sicampus.bootcamp2026.components.SimpleTextField
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavHostController) {
     val cyanColor = Color(0xFF80F9F9)
     val lightGray = Color(0xFFE0E0E0)
 
-    var meetingName by remember { mutableStateOf("") }
-    var meetingDate by remember { mutableStateOf("") }
-    var meetingTime by remember { mutableStateOf("") }
-    var searchQuery by remember { mutableStateOf("") }
-
     Scaffold(
-        topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(cyanColor)
-                    .padding(horizontal = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = { navController.navigate(Routes.Profile.route) },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(Icons.Default.AccountCircle, contentDescription = "Профиль", modifier = Modifier.size(32.dp))
-                }
-                IconButton(
-                    onClick = {
-                        navController.navigate(Routes.Auth.route) {
-                            popUpTo(0)
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(Icons.Default.Logout, contentDescription = "Выход", modifier = Modifier.size(32.dp))
-                }
-            }
-        },
         bottomBar = {
-            NavigationBar(
-                containerColor = lightGray,
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.Invitations.route) },
-                    icon = { Icon(Icons.Default.Mail, contentDescription = null) },
-                    label = { Text("Приглашения") }
-                )
-                NavigationBarItem(
-                    selected = true,
-                    onClick = {},
-                    icon = { Icon(Icons.Default.Home, contentDescription = null, tint = Color(0xFF00C2FF)) },
-                    label = { Text("Главная", color = Color(0xFF00C2FF)) }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { navController.navigate(Routes.Schedule.route) },
-                    icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
-                    label = { Text("Расписание") }
-                )
-            }
-        }
+            NavBar(navController = navController)
+        },
+        modifier = Modifier
+            .statusBarsPadding()
     ) { padding ->
         Column(
             modifier = Modifier
@@ -103,34 +55,26 @@ fun MainScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text("Название встречи", fontSize = 14.sp, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
-                MainField(
-                    value = meetingName,
-                    onValueChange = { meetingName = it },
-                    placeholder = ""
-                )
-            }
+            SimpleTextField(
+                label = "Название встречи",
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Дата встречи", fontSize = 14.sp, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
-                    MainField(
-                        value = meetingDate,
-                        onValueChange = { meetingDate = it },
-                        trailingIcon = Icons.Default.DateRange
-                    )
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Время встречи", fontSize = 14.sp, modifier = Modifier.padding(start = 12.dp, bottom = 4.dp))
-                    MainField(
-                        value = meetingTime,
-                        onValueChange = { meetingTime = it },
-                        placeholder = "HH:OO"
-                    )
-                }
+            Column(modifier = Modifier) {
+                SimpleTextField(
+                    label = "Дата встречи",
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = ""
+                        )
+                    }
+                )
+                SimpleTextField(
+                    label = "Время встречи",
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -143,11 +87,15 @@ fun MainScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            MainField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = "Поиск",
-                trailingIcon = Icons.Default.Search
+            SimpleTextField(
+                label = "Поиск",
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null
+                    )
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -165,24 +113,17 @@ fun MainScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            Button(
-                onClick = {},
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = cyanColor),
-                shape = RoundedCornerShape(15.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, Color.Black)
+            SimpleButton(
+                text = "Отправить приглашения"
             ) {
-                Text("Отправить приглашения", color = Color.Black, fontSize = 16.sp)
+
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
     MainScreen(rememberNavController())
