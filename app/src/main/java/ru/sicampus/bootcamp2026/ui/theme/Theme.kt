@@ -5,27 +5,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = accentLight,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
+    primary = Color.White,
+    onPrimary = Color.Black,
+    primaryContainer = Color.White,
+    onPrimaryContainer = Color.Black,
+    secondary = CyanApp,
+    tertiary = RedApp,
+    background = Color.Black,
+    onBackground = Color.White,
+    surface = Color.Black,
+    onSurface = Color.White,
+    surfaceVariant = Color.Black,
+    onSurfaceVariant = Color.White,
+    outlineVariant = Color.Gray
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = accentDark,
-    secondary = secondaryLight,
-    tertiary = cyanColor
-
-//     Other default colors to override
-//    background = Color(0xFFFFFBFE),
-//    surface = Color(0xFFFFFBFE),
-//    onPrimary = Color.White,
-//    onSecondary = Color.White,
-//    onTertiary = Color.White,
-//    onBackground = Color(0xFF1C1B1F),
-//    onSurface = Color(0xFF1C1B1F),
-//
+    primary = BlueApp,
+    onPrimary = Color.White,
+    secondary = CyanApp,
+    tertiary = RedApp,
+    background = Color.White,
+    onBackground = Color.Black,
+    surface = Color.White,
+    onSurface = Color.Black,
+    surfaceVariant = LightGrayApp,
+    onSurfaceVariant = Color.Gray,
+    outlineVariant = Color.Gray
 )
 
 @Composable
@@ -47,7 +56,7 @@ fun AndroidBootcamp2026FrontendTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }

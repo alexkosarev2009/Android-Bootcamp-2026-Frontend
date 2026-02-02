@@ -2,6 +2,7 @@ package ru.sicampus.bootcamp2026.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,18 +28,19 @@ fun ProfilePicture(imageVector: ImageVector) {
         imageVector = imageVector,
         contentDescription = "Аватар профиля",
         contentScale = ContentScale.Crop,
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant),
         modifier = Modifier
             .size(200.dp)
             .clip(CircleShape)
-            .background(Color.Gray)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .border(2.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
     )
 }
 
 @Composable
 fun ChangePFP() {
     Image(
-        imageVector = ImageVector.vectorResource(R.drawable.camera_add_svgrepo_com),
+        painter = painterResource(id = R.drawable.camera_add_svgrepo_com),
         contentDescription = "Изменить аватар",
         contentScale = ContentScale.Fit,
         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.background),
