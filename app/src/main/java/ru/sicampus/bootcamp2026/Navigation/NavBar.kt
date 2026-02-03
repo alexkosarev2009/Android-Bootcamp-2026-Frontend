@@ -1,4 +1,4 @@
-package ru.sicampus.bootcamp2026.Navigation
+package ru.sicampus.bootcamp2026.navigation
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -13,10 +13,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
