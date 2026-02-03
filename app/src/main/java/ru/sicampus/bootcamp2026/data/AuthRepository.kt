@@ -18,7 +18,6 @@ class AuthRepository(
         if (!result) authLocalDataSource.clearToken()
         return result
     }
-
     suspend fun register(
         login: String,
         password: String,
