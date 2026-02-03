@@ -7,7 +7,9 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.request.header
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -33,7 +35,12 @@ object Network {
                 }
                 level = LogLevel.ALL
             }
-            defaultRequest { contentType(ContentType.Application.Json) }
+            defaultRequest { 
+                contentType(ContentType.Application.Json)
+                AuthLocalDataSource.token?.let {
+                    header(HttpHeaders.Authorization, it)
+                }
+            }
         }
     }
 }

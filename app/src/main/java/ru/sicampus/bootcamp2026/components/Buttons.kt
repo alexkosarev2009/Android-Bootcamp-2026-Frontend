@@ -17,11 +17,13 @@ import androidx.compose.ui.unit.sp
 fun SimpleButton(
     text: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     color: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier
             .height(50.dp)
             .widthIn(min = 150.dp, max = 250.dp),
