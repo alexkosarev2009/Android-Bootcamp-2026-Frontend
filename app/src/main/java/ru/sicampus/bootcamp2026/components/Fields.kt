@@ -23,21 +23,19 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SimpleTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier.width(300.dp),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
-
-
+    visualTransformation: androidx.compose.ui.text.input.VisualTransformation = androidx.compose.ui.text.input.VisualTransformation.None
 ) {
-    var textState by rememberSaveable { mutableStateOf("") }
     OutlinedTextField(
-        value = textState,
-        onValueChange = {
-            textState = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         shape = RoundedCornerShape(15.dp),
         label = {
             Text(
@@ -51,6 +49,7 @@ fun SimpleTextField(
         modifier = modifier,
         trailingIcon = trailingIcon,
         keyboardOptions = keyboardOptions,
+        visualTransformation = visualTransformation
     )
 }
 

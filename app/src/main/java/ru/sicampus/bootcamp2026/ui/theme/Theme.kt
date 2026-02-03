@@ -56,7 +56,7 @@ fun AndroidBootcamp2026FrontendTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }
