@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,34 +38,45 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import ru.sicampus.bootcamp2026.navigation.Routes
+import ru.sicampus.bootcamp2026.components.RefText
 import ru.sicampus.bootcamp2026.components.SimpleButton
 import ru.sicampus.bootcamp2026.components.SimpleTextField
-import ru.sicampus.bootcamp2026.components.RefText
+import ru.sicampus.bootcamp2026.navigation.Routes
 import ru.sicampus.bootcamp2026.ui.theme.AndroidBootcamp2026FrontendTheme
 
 @Composable
 fun RegistrationScreen(
     navController: NavHostController,
-    viewModel: RegistrationStateModel = viewModel<RegistrationStateModel>()
+    viewModel: RegistrationViewModel = viewModel<RegistrationViewModel>()
 ) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(state.isRegistered) {
         if (state.isRegistered) {
-            navController.navigate(Routes.Auth.route) {
-                popUpTo(Routes.Registration.route) { inclusive = true }
+            navController.navigate(Routes.Home.route) {
+                popUpTo(Routes.Auth.route) { inclusive = true }
             }
         }
     }
-    
+
     RegistrationScreenContent(
         state = state,
         navController = navController,
-        onNameChange = viewModel::onNameChange,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onRegisterClick = viewModel::onRegisterClick
+        onNameChange = { name ->
+            viewModel.onIntent(RegistrationIntent.TextInput(name, state.login, state.email, state.password))
+        },
+        onLoginChange = { login ->
+            viewModel.onIntent(RegistrationIntent.TextInput(state.name, login, state.email, state.password))
+        },
+        onEmailChange = { email ->
+            viewModel.onIntent(RegistrationIntent.TextInput(state.name, state.login, email, state.password))
+        },
+        onPasswordChange = { password ->
+            viewModel.onIntent(RegistrationIntent.TextInput(state.name, state.login, state.email, password))
+        },
+        onRegisterClick = {
+            viewModel.onIntent(RegistrationIntent.Register(state.name, state.login, state.email, state.password))
+        }
     )
 }
 
@@ -75,6 +85,7 @@ private fun RegistrationScreenContent(
     state: RegistrationState,
     navController: NavHostController,
     onNameChange: (String) -> Unit,
+    onLoginChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onRegisterClick: () -> Unit
@@ -98,12 +109,12 @@ private fun RegistrationScreenContent(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             SimpleTextField(
                 value = state.name,
                 onValueChange = onNameChange,
-                label = "ФИО",
+                label = "Имя",
                 leadingIcon = {
                     Image(
                         imageVector = Icons.Default.Person,
@@ -113,12 +124,27 @@ private fun RegistrationScreenContent(
                 }
             )
 
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            SimpleTextField(
+                value = state.login,
+                onValueChange = onLoginChange,
+                label = "Логин",
+                leadingIcon = {
+                    Image(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+                }
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             SimpleTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
-                label = "Электронная почта",
+                label = "Электронная почта (опционально)",
                 leadingIcon = {
                     Image(
                         imageVector = Icons.Default.Email,
@@ -129,7 +155,7 @@ private fun RegistrationScreenContent(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             SimpleTextField(
                 value = state.password,
@@ -155,13 +181,13 @@ private fun RegistrationScreenContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            SimpleButton("Зарегистрироваться") {
+            SimpleButton("Зарегистрироваться", enabled = state.isEnabledRegister) {
                 onRegisterClick()
             }
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Row {
                 Text(
@@ -169,7 +195,7 @@ private fun RegistrationScreenContent(
                     fontSize = 16.sp
                 )
                 RefText(
-                    text = "Войти",
+                    text = "Войдите",
                     onClick = {
                         navController.navigate(Routes.Auth.route)
                     }
@@ -198,6 +224,7 @@ fun PreviewRegistrationScreen() {
             state = RegistrationState(),
             navController = rememberNavController(),
             onNameChange = {},
+            onLoginChange = {},
             onEmailChange = {},
             onPasswordChange = {},
             onRegisterClick = {}

@@ -49,7 +49,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 @Composable
 fun AuthScreen(
     navController: NavHostController,
-    viewModel: AuthStateModel = viewModel<AuthStateModel>()
+    viewModel: AuthViewModel = viewModel<AuthViewModel>()
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -64,9 +64,15 @@ fun AuthScreen(
     AuthScreenContent(
         state = state,
         navController = navController,
-        onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onLoginClick = viewModel::onLoginClick
+        onEmailChange = { email -> 
+            viewModel.onIntent(AuthIntent.TextInput(email, state.password)) 
+        },
+        onPasswordChange = { password -> 
+            viewModel.onIntent(AuthIntent.TextInput(state.email, password)) 
+        },
+        onLoginClick = { 
+            viewModel.onIntent(AuthIntent.Send(state.email, state.password)) 
+        }
     )
 }
 
@@ -141,7 +147,7 @@ private fun AuthScreenContent(
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            SimpleButton("Войти") {
+            SimpleButton("Войти", enabled = state.isEnabledSend) {
                 onLoginClick()
             }
 
