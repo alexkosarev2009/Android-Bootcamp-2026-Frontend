@@ -4,14 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRequestDto(
-    @SerialName("login")
-    val login: String,
-    @SerialName("password")
-    val password: String
-)
-
-@Serializable
 data class AuthResponseDto(
     @SerialName("token")
     val token: String?,

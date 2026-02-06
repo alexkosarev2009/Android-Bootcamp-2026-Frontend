@@ -239,7 +239,7 @@ fun InvitationCard(
                 
                 SimpleButton("Отклонить",
                     modifier = Modifier.weight(1f),
-                    color = MaterialTheme.colorScheme.error // Using theme error color for "Decline"
+                    color = MaterialTheme.colorScheme.error
                 ) { }
             }
         }

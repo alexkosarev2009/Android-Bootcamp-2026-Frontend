@@ -2,11 +2,10 @@ package ru.sicampus.bootcamp2026.domain
 
 class CheckAuthFormatUseCase {
     operator fun invoke(
-        login: String,
+        email: String,
         password: String
     ): Boolean {
-        return login.length > 2 && login.all { char ->
-            (char in 'A'..'Z') || (char in 'a'..'z') || (char in '0'..'9')
-        } && password.isNotBlank()
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
+        return email.matches(emailRegex) && password.isNotBlank()
     }
 }

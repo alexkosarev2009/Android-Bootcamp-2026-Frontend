@@ -13,7 +13,6 @@ class InvitingStateModel : ViewModel() {
     fun getData() {
         viewModelScope.launch {
             _uiState.emit(InvitingState.Loading)
-            // Logic will be added later
             _uiState.emit(InvitingState.Content)
         }
     }

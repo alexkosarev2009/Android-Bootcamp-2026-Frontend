@@ -13,7 +13,6 @@ class ScheduleStateModel : ViewModel() {
     fun getData() {
         viewModelScope.launch {
             _uiState.emit(ScheduleState.Loading)
-            // Logic will be added later
             _uiState.emit(ScheduleState.Content)
         }
     }

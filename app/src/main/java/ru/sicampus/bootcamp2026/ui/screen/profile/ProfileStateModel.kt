@@ -13,7 +13,6 @@ class ProfileStateModel : ViewModel() {
     fun getData() {
         viewModelScope.launch {
             _uiState.emit(ProfileState.Loading)
-            // Logic will be added later
             _uiState.emit(ProfileState.Content)
         }
     }
