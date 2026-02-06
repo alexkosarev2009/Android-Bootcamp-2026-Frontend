@@ -43,7 +43,6 @@ fun NavBar(
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surface,
     ) {
-        // Приглашения
         NavigationBarItem(
             selected = selectedTab == 0,
             onClick = {
@@ -70,7 +69,6 @@ fun NavBar(
             colors = colors
         )
 
-        // Главная
         NavigationBarItem(
             selected = selectedTab == 1,
             onClick = {
@@ -97,7 +95,6 @@ fun NavBar(
             colors = colors
         )
 
-        // Расписание
         NavigationBarItem(
             selected = selectedTab == 2,
             onClick = {
@@ -124,7 +121,6 @@ fun NavBar(
             colors = colors
         )
 
-        // Профиль
         NavigationBarItem(
             selected = selectedTab == 3,
             onClick = {

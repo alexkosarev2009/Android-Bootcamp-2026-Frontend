@@ -28,13 +28,11 @@ class MainStateModel : ViewModel() {
     }
 
     fun onCreateMeetingClick() {
-        // Logic for creating a meeting
     }
 
     fun getData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            // Logic will be added later
             _uiState.update { it.copy(isLoading = false) }
         }
     }

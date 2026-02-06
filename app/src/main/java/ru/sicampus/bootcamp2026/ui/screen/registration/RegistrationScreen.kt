@@ -126,25 +126,11 @@ private fun RegistrationScreenContent(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            SimpleTextField(
-                value = state.login,
-                onValueChange = onLoginChange,
-                label = "Логин",
-                leadingIcon = {
-                    Image(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "",
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             SimpleTextField(
                 value = state.email,
                 onValueChange = onEmailChange,
-                label = "Электронная почта (опционально)",
+                label = "Электронная почта",
                 leadingIcon = {
                     Image(
                         imageVector = Icons.Default.Email,

@@ -2,12 +2,10 @@ package ru.sicampus.bootcamp2026.domain
 
 import ru.sicampus.bootcamp2026.data.AuthRepository
 import ru.sicampus.bootcamp2026.data.source.AuthLocalDataSource
-import ru.sicampus.bootcamp2026.data.source.AuthNetworkDataSource
 
 
 class CheckAndSaveAuthUseCase(
     private val authRepository: AuthRepository = AuthRepository(
-        AuthNetworkDataSource(),
         AuthLocalDataSource
     )
 ) {

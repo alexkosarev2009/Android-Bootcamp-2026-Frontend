@@ -10,7 +10,6 @@ class AuthLocalDataSourceTest {
     fun `setToken should correctly encode login and password to Basic auth format`() {
         val login = "user"
         val password = "password"
-        // Base64 encoding of "user:password" is "dXNlcjpwYXNzd29yZA=="
         val expectedToken = "Basic dXNlcjpwYXNzd29yZA=="
 
         AuthLocalDataSource.setToken(login, password)

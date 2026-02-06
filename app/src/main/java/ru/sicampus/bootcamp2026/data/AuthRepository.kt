@@ -3,18 +3,15 @@ package ru.sicampus.bootcamp2026.data
 import ru.sicampus.bootcamp2026.data.dto.RegistrationRequestDto
 import ru.sicampus.bootcamp2026.data.source.AuthApiService
 import ru.sicampus.bootcamp2026.data.source.AuthLocalDataSource
-import ru.sicampus.bootcamp2026.data.source.AuthNetworkDataSource
 
 
 class AuthRepository(
-    private val authNetworkDataSource: AuthNetworkDataSource,
     private val authLocalDataSource: AuthLocalDataSource,
     private val authApiService: AuthApiService = AuthApiService()
 ) {
     suspend fun checkAndAuth(login: String, password: String): Boolean {
         authLocalDataSource.setToken(login, password)
-        val token = authLocalDataSource.token ?: return false
-        val result = authNetworkDataSource.checkAuth(token)
+        val result = authApiService.checkAuth()
         if (!result) authLocalDataSource.clearToken()
         return result
     }
