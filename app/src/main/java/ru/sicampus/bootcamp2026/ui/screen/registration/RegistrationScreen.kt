@@ -137,8 +137,7 @@ private fun RegistrationScreenContent(
                         contentDescription = "",
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -154,7 +153,6 @@ private fun RegistrationScreenContent(
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation()
             )
 

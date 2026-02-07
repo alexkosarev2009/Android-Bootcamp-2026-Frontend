@@ -115,8 +115,7 @@ private fun AuthScreenContent(
                         contentDescription = "",
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                }
             )
 
             Spacer(modifier = Modifier.height(25.dp))
@@ -132,7 +131,6 @@ private fun AuthScreenContent(
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = PasswordVisualTransformation()
             )
 

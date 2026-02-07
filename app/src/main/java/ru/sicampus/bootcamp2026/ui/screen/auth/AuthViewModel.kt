@@ -22,7 +22,7 @@ class AuthViewModel : ViewModel() {
             is AuthIntent.Send -> {
                 viewModelScope.launch {
                     _uiState.update { it.copy(isLoading = true, error = null) }
-                    checkAndSaveAuthUseCase(intent.login, intent.password).fold(
+                    checkAndSaveAuthUseCase(intent.login.trim(), intent.password.trim()).fold(
                         onSuccess = {
                             _uiState.update { it.copy(isLoading = false, isAuthorized = true) }
                         },

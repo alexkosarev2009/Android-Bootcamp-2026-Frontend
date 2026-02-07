@@ -1,6 +1,7 @@
 package ru.sicampus.bootcamp2026.components
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -13,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -21,7 +23,8 @@ fun ProfileField(
     label: String,
     value: String,
     isEdistable: Boolean,
-    leadingIcon: ImageVector? = null
+    leadingIcon: ImageVector? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
 ){
     var text by remember { mutableStateOf(value) }
     OutlinedTextField(
@@ -39,6 +42,7 @@ fun ProfileField(
                 )
             }
         } else null,
+        keyboardOptions = keyboardOptions,
         colors = TextFieldDefaults.colors(
             focusedTextColor = MaterialTheme.colorScheme.onSurface,
             unfocusedTextColor = MaterialTheme.colorScheme.onSurface,

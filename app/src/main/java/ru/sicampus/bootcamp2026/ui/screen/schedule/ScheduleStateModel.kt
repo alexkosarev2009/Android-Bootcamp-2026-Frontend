@@ -6,14 +6,26 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ScheduleStateModel : ViewModel() {
-    private val _uiState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Content)
+import ru.sicampus.bootcamp2026.domain.GetMyMeetingsUseCase
+
+class ScheduleStateModel(
+    private val getMyMeetingsUseCase: GetMyMeetingsUseCase = GetMyMeetingsUseCase()
+) : ViewModel() {
+    private val _uiState: MutableStateFlow<ScheduleState> = MutableStateFlow(ScheduleState.Content())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        getData()
+    }
 
     fun getData() {
         viewModelScope.launch {
             _uiState.emit(ScheduleState.Loading)
-            _uiState.emit(ScheduleState.Content)
+            getMyMeetingsUseCase().onSuccess { meetings ->
+                _uiState.emit(ScheduleState.Content(meetings))
+            }.onFailure { e ->
+                _uiState.emit(ScheduleState.Error(e.message ?: "Ошибка при загрузке расписания"))
+            }
         }
     }
 }

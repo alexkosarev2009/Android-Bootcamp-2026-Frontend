@@ -24,6 +24,7 @@ import ru.sicampus.bootcamp2026.navigation.Routes
 import ru.sicampus.bootcamp2026.components.SimpleButton
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.sicampus.bootcamp2026.domain.entities.InvitationEntity
 import ru.sicampus.bootcamp2026.ui.theme.AndroidBootcamp2026FrontendTheme
 
 @Composable
@@ -36,7 +37,8 @@ fun InvitingScreen(
     InvitingScreenContent(
         state = state,
         navController = navController,
-        onRefresh = { viewModel.getData() }
+        onRefresh = { viewModel.getData() },
+        onRespond = { invitation, status -> viewModel.respondToInvitation(invitation, status) }
     )
 }
 
@@ -44,18 +46,25 @@ fun InvitingScreen(
 private fun InvitingScreenContent(
     state: InvitingState,
     navController: NavHostController,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onRespond: (InvitationEntity, Int) -> Unit
 ) {
     when (state) {
         is InvitingState.Loading -> InvitingStateLoading()
         is InvitingState.Error -> InvitingStateError(state, onRefresh = onRefresh)
-        is InvitingState.Content -> InvitingStateContent(navController = navController)
+        is InvitingState.Content -> InvitingStateContent(
+            state = state,
+            navController = navController,
+            onRespond = onRespond
+        )
     }
 }
 
 @Composable
 private fun InvitingStateContent(
-    navController: NavHostController
+    state: InvitingState.Content,
+    navController: NavHostController,
+    onRespond: (InvitationEntity, Int) -> Unit
 ) {
     Scaffold(
         bottomBar = {
@@ -105,33 +114,28 @@ private fun InvitingStateContent(
                         .padding(top = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    InvitationCard(
-                        title = "Название1",
-                        organizer = "Организатор1",
-                        date = "17.08.2026",
-                        time = "17:00",
-                    )
-                    
-                    InvitationCard(
-                        title = "Название2",
-                        organizer = "Организатор2",
-                        date = "17.08.2026",
-                        time = "18:00",
-                    )
-
-                    InvitationCard(
-                        title = "Название3",
-                        organizer = "Организатор3",
-                        date = "18.08.2026",
-                        time = "10:00",
-                    )
-
-                    InvitationCard(
-                        title = "Название4",
-                        organizer = "Организатор4",
-                        date = "19.08.2026",
-                        time = "10:00",
-                    )
+                    if (state.invitations.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize().padding(top = 40.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "У вас пока нет приглашений",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        state.invitations.filter { it.status == 0 }.forEach { invitation ->
+                            InvitationCard(
+                                title = invitation.meeting?.title ?: "Без названия",
+                                organizer = invitation.meeting?.organizerId?.toString() ?: "Неизвестно",
+                                date = invitation.meeting?.date?.toString() ?: "??.??.????",
+                                time = "${invitation.meeting?.startHour ?: 0}:00",
+                                onAccept = { onRespond(invitation, 1) },
+                                onReject = { onRespond(invitation, 2) }
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
@@ -188,6 +192,8 @@ fun InvitationCard(
     organizer: String,
     date: String,
     time: String,
+    onAccept: () -> Unit,
+    onReject: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -235,12 +241,12 @@ fun InvitationCard(
             ) {
                 SimpleButton("Принять",
                     modifier = Modifier.weight(1f)
-                ) { }
+                ) { onAccept() }
                 
                 SimpleButton("Отклонить",
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.error
-                ) { }
+                ) { onReject() }
             }
         }
     }
@@ -251,9 +257,10 @@ fun InvitationCard(
 fun InvitingScreenPreview() {
     AndroidBootcamp2026FrontendTheme {
         InvitingScreenContent(
-            state = InvitingState.Content,
+            state = InvitingState.Content(),
             navController = rememberNavController(),
-            onRefresh = {}
+            onRefresh = {},
+            onRespond = { _, _ -> }
         )
     }
 }

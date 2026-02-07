@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.border
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -18,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -27,7 +29,7 @@ fun SimpleTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier.width(300.dp),
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -35,7 +37,9 @@ fun SimpleTextField(
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            onValueChange(newValue)
+        },
         shape = RoundedCornerShape(15.dp),
         label = {
             Text(
@@ -49,25 +53,28 @@ fun SimpleTextField(
         modifier = modifier,
         trailingIcon = trailingIcon,
         keyboardOptions = keyboardOptions,
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+            focusedBorderColor = MaterialTheme.colorScheme.primary
+        )
     )
 }
 
 @Composable
 fun EditableField(
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier.width(300.dp),
     label: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
     leadingIcon: @Composable (() -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
 ) {
     var enabled by remember { mutableStateOf(false) }
-    var textState by rememberSaveable { mutableStateOf("") }
     OutlinedTextField(
-        value = textState,
-        onValueChange = {
-            textState = it
-        },
+        value = value,
+        onValueChange = onValueChange,
         shape = RoundedCornerShape(15.dp),
         label = {
             Text(
