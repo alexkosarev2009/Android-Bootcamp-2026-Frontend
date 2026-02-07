@@ -24,18 +24,13 @@ class AuthRepository(
         return try {
             val response = authApiService.register(
                 RegistrationRequestDto(
-                    login = login,
+                    email = login,
                     password = password,
-                    name = name,
-                    email = email
+                    fullName = name
                 )
             )
-            if (response.token != null) {
-                authLocalDataSource.setToken(login, password)
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("Registration failed: no token received"))
-            }
+            authLocalDataSource.setToken(login, password)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

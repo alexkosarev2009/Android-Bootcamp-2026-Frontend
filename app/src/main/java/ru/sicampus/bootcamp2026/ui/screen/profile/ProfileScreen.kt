@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ru.sicampus.bootcamp2026.navigation.NavBar
@@ -55,7 +57,9 @@ fun ProfileScreen(
     ProfileScreenContent(
         state = state,
         navController = navController,
-        onRefresh = { viewModel.getData() }
+        onRefresh = { viewModel.getData() },
+        onNameChange = { viewModel.updateName(it) },
+        onSave = { viewModel.saveProfile() }
     )
 }
 
@@ -63,18 +67,28 @@ fun ProfileScreen(
 private fun ProfileScreenContent(
     state: ProfileState,
     navController: NavHostController,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onNameChange: (String) -> Unit,
+    onSave: () -> Unit
 ) {
     when (state) {
         is ProfileState.Loading -> ProfileStateLoading()
         is ProfileState.Error -> ProfileStateError(state, onRefresh = onRefresh)
-        is ProfileState.Content -> ProfileStateContent(navController = navController)
+        is ProfileState.Content -> ProfileStateContent(
+            state = state,
+            navController = navController,
+            onNameChange = onNameChange,
+            onSave = onSave
+        )
     }
 }
 
 @Composable
 private fun ProfileStateContent(
-    navController: NavHostController
+    state: ProfileState.Content,
+    navController: NavHostController,
+    onNameChange: (String) -> Unit,
+    onSave: () -> Unit
 ) {
     Scaffold(
         bottomBar = {
@@ -107,7 +121,12 @@ private fun ProfileStateContent(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                EditableField(label = "ФИО", modifier = Modifier.fillMaxWidth())
+                EditableField(
+                    value = state.fullName,
+                    onValueChange = onNameChange,
+                    label = "ФИО",
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 Spacer(modifier = Modifier.height(25.dp))
 
@@ -124,7 +143,7 @@ private fun ProfileStateContent(
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        "example@gmail.com",
+                        state.email,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp
                     )
@@ -133,6 +152,7 @@ private fun ProfileStateContent(
                 Spacer(modifier = Modifier.height(40.dp))
 
                 SimpleButton("Сохранить") {
+                    onSave()
                 }
             }
 
@@ -187,9 +207,14 @@ private fun ProfileStateLoading() {
 fun ProfileScreenPreview() {
     AndroidBootcamp2026FrontendTheme {
         ProfileScreenContent(
-            state = ProfileState.Content,
+            state = ProfileState.Content(
+                fullName = "Иван Иванов",
+                email = "user1@test.ru"
+            ),
             navController = rememberNavController(),
-            onRefresh = {}
+            onRefresh = {},
+            onNameChange = {},
+            onSave = {}
         )
     }
 }

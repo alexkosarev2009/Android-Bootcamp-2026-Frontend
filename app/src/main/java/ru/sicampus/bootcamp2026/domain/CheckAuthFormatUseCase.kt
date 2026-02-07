@@ -5,7 +5,8 @@ class CheckAuthFormatUseCase {
         email: String,
         password: String
     ): Boolean {
-        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
-        return email.matches(emailRegex) && password.isNotBlank()
+        val trimmedEmail = email.trim()
+        val trimmedPassword = password.trim()
+        return trimmedEmail.contains("@") && trimmedEmail.contains(".") && trimmedPassword.isNotEmpty()
     }
 }

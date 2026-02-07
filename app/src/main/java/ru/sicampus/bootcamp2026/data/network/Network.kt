@@ -38,8 +38,9 @@ object Network {
             defaultRequest { 
                 contentType(ContentType.Application.Json)
                 AuthLocalDataSource.token?.let {
+                    Log.d("Network", "Adding Authorization header: $it")
                     header(HttpHeaders.Authorization, it)
-                }
+                } ?: Log.d("Network", "No token found in AuthLocalDataSource")
             }
         }
     }

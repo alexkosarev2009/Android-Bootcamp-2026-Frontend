@@ -72,12 +72,16 @@ private fun ScheduleScreenContent(
     when (state) {
         is ScheduleState.Loading -> ScheduleStateLoading()
         is ScheduleState.Error -> ScheduleStateError(state, onRefresh = onRefresh)
-        is ScheduleState.Content -> ScheduleStateContent(navController = navController)
+        is ScheduleState.Content -> ScheduleStateContent(
+            state = state,
+            navController = navController
+        )
     }
 }
 
 @Composable
 private fun ScheduleStateContent(
+    state: ScheduleState.Content,
     navController: NavHostController
 ) {
     var selectedTab by remember { mutableStateOf("неделя") }
@@ -116,21 +120,20 @@ private fun ScheduleStateContent(
                     
                     Spacer(modifier = Modifier.height(30.dp))
 
-                    // Табы
+                    val tabs = listOf("день", "неделя", "месяц")
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        TabItem("день", selectedTab == "день") { selectedTab = "день" }
-                        TabItem("неделя", selectedTab == "неделя") { selectedTab = "неделя" }
-                        TabItem("месяц", selectedTab == "месяц") { selectedTab = "месяц" }
+                        tabs.forEach { title ->
+                            TabItem(title, selectedTab == title) { selectedTab = title }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }
 
-                // Область со списком
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -144,18 +147,30 @@ private fun ScheduleStateContent(
                         .padding(top = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    ScheduleCard("Название1", "Организатор1", "17.08.2026", "17:00")
-                    ScheduleCard("Название2", "Организатор2", "17.08.2026", "18:00")
-                    ScheduleCard("Название3", "Организатор3", "18.08.2026", "12:00")
-                    
-                    if (selectedTab != "день") {
-                        ScheduleCard("Название4", "Организатор4", "19.08.2026", "10:00")
+                    if (state.meetings.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "У вас пока нет встреч",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        state.meetings.forEach { meeting ->
+                            ScheduleCard(
+                                title = meeting.title,
+                                organizer = meeting.organizerId.toString(), // We might want to show name instead
+                                date = meeting.date.toString(),
+                                time = "${meeting.startHour}:00"
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
 
-            // Кнопка выхода
             IconButton(
                 onClick = { 
                     navController.navigate(Routes.Auth.route) {
@@ -262,7 +277,7 @@ fun ScheduleCard(title: String, organizer: String, date: String, time: String) {
 fun ScheduleScreenPreview() {
     AndroidBootcamp2026FrontendTheme {
         ScheduleScreenContent(
-            state = ScheduleState.Content,
+            state = ScheduleState.Content(),
             navController = rememberNavController(),
             onRefresh = {}
         )
