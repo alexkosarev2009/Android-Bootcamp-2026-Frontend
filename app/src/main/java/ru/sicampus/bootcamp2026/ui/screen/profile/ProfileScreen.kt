@@ -40,12 +40,16 @@ import androidx.navigation.compose.rememberNavController
 import ru.sicampus.bootcamp2026.navigation.NavBar
 import ru.sicampus.bootcamp2026.navigation.Routes
 import ru.sicampus.bootcamp2026.components.ChangePFP
-import ru.sicampus.bootcamp2026.components.EditableField
 import ru.sicampus.bootcamp2026.components.ProfilePicture
 import ru.sicampus.bootcamp2026.components.SimpleButton
 
 import androidx.compose.material3.CircularProgressIndicator
 import ru.sicampus.bootcamp2026.ui.theme.AndroidBootcamp2026FrontendTheme
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun ProfileScreen(
@@ -57,9 +61,7 @@ fun ProfileScreen(
     ProfileScreenContent(
         state = state,
         navController = navController,
-        onRefresh = { viewModel.getData() },
-        onNameChange = { viewModel.updateName(it) },
-        onSave = { viewModel.saveProfile() }
+        onRefresh = { viewModel.getData() }
     )
 }
 
@@ -67,30 +69,65 @@ fun ProfileScreen(
 private fun ProfileScreenContent(
     state: ProfileState,
     navController: NavHostController,
-    onRefresh: () -> Unit,
-    onNameChange: (String) -> Unit,
-    onSave: () -> Unit
+    onRefresh: () -> Unit
 ) {
     when (state) {
         is ProfileState.Loading -> ProfileStateLoading()
         is ProfileState.Error -> ProfileStateError(state, onRefresh = onRefresh)
         is ProfileState.Content -> ProfileStateContent(
             state = state,
-            navController = navController,
-            onNameChange = onNameChange,
-            onSave = onSave
+            navController = navController
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileStateContent(
     state: ProfileState.Content,
-    navController: NavHostController,
-    onNameChange: (String) -> Unit,
-    onSave: () -> Unit
+    navController: NavHostController
 ) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Профиль",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate(Routes.Invitations.route) }) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Приглашения",
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { 
+                        navController.navigate(Routes.Auth.route) {
+                            popUpTo(navController.graph.id) { inclusive = true }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Выйти",
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        },
         bottomBar = {
             NavBar(navController = navController)
         }
@@ -110,7 +147,7 @@ private fun ProfileStateContent(
                 verticalArrangement = Arrangement.Center
             ) {
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
                     contentAlignment = Alignment.BottomEnd
@@ -121,12 +158,24 @@ private fun ProfileStateContent(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                EditableField(
-                    value = state.fullName,
-                    onValueChange = onNameChange,
-                    label = "ФИО",
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(
+                        "ФИО",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp
+                    )
+
+                    Spacer(Modifier.height(10.dp))
+
+                    Text(
+                        state.fullName,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 18.sp
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(25.dp))
 
@@ -150,28 +199,6 @@ private fun ProfileStateContent(
                 }
 
                 Spacer(modifier = Modifier.height(40.dp))
-
-                SimpleButton("Сохранить") {
-                    onSave()
-                }
-            }
-
-            IconButton(
-                onClick = { 
-                    navController.navigate(Routes.Auth.route) {
-                        popUpTo(navController.graph.id) { inclusive = true }
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 16.dp, end = 16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Выход",
-                    tint = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.size(28.dp)
-                )
             }
         }
     }
@@ -212,9 +239,7 @@ fun ProfileScreenPreview() {
                 email = "user1@test.ru"
             ),
             navController = rememberNavController(),
-            onRefresh = {},
-            onNameChange = {},
-            onSave = {}
+            onRefresh = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package ru.sicampus.bootcamp2026.ui.screen.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import ru.sicampus.bootcamp2026.domain.GetUsersUseCase
 import ru.sicampus.bootcamp2026.domain.entities.UserEntity
 import java.time.LocalDate
 
+@SuppressLint("NewApi")
 class MainStateModel(
     private val getUsersUseCase: GetUsersUseCase = GetUsersUseCase(),
     private val getCurrentUserUseCase: GetCurrentUserUseCase = GetCurrentUserUseCase(),
@@ -69,7 +71,12 @@ class MainStateModel(
             }
             
             getUsersUseCase(page = 0, query = query).onSuccess { users ->
-                _uiState.update { it.copy(foundUsers = users) }
+                _uiState.update { state ->
+                    val filteredUsers = users.filter { user ->
+                        state.selectedUsers.none { it.id == user.id }
+                    }
+                    state.copy(foundUsers = filteredUsers)
+                }
             }.onFailure { e ->
                 _uiState.update { it.copy(error = e.message) }
             }
@@ -122,7 +129,6 @@ class MainStateModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             
-            // Parallel loading of users and current user
             val currentUserResult = getCurrentUserUseCase()
             
             currentUserResult.onSuccess { user ->

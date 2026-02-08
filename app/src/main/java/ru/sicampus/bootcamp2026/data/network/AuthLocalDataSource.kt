@@ -24,7 +24,6 @@ object AuthLocalDataSource {
 
     fun init(context: Context) {
         appContext = context.applicationContext
-        // Первоначальная загрузка может быть в runBlocking, так как это init
         _token = runBlocking {
             appContext?.dataStore?.data?.map { it[TOKEN_KEY] }?.firstOrNull()
         }.let { if (it.isNullOrBlank()) null else it }
@@ -36,7 +35,6 @@ object AuthLocalDataSource {
         private set(value) {
             Log.d("AuthLocalDataSource", "Setting token: $value")
             _token = value
-            // Используем CoroutineScope вместо runBlocking, чтобы не блокировать поток
             GlobalScope.launch(Dispatchers.IO) {
                 appContext?.dataStore?.edit { it[TOKEN_KEY] = value ?: "" }
             }
