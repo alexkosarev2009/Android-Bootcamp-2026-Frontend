@@ -376,6 +376,17 @@ private fun MainScreenContent(
                 SimpleButton("Создать встречу") {
                     onCreateMeetingClick()
                 }
+
+                if (state.error != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = state.error ?: "",
+                        color = MaterialTheme.colorScheme.error,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
                 
                 Spacer(modifier = Modifier.height(24.dp))
             }

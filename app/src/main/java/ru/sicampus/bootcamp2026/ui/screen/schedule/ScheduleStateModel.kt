@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 
 import kotlinx.coroutines.flow.update
 import ru.sicampus.bootcamp2026.domain.GetMyMeetingsUseCase
+import ru.sicampus.bootcamp2026.util.ErrorUtils
 import java.time.LocalDate
 
 class ScheduleStateModel(
@@ -36,7 +37,7 @@ class ScheduleStateModel(
             getMyMeetingsUseCase().onSuccess { meetings ->
                 _uiState.emit(ScheduleState.Content(meetings, selectedDate))
             }.onFailure { e ->
-                _uiState.emit(ScheduleState.Error(e.message ?: "Ошибка при загрузке расписания"))
+                _uiState.emit(ScheduleState.Error(ErrorUtils.translateError(e, "Ошибка при загрузке расписания")))
             }
         }
     }

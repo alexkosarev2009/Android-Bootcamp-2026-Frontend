@@ -51,17 +51,36 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.text.font.FontWeight
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
     viewModel: ProfileStateModel = viewModel<ProfileStateModel>()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            val bytes = context.contentResolver.openInputStream(it)?.readBytes()
+            if (bytes != null) {
+                viewModel.uploadImage(bytes, "pfp.jpg")
+            }
+        }
+    }
     
     ProfileScreenContent(
         state = state,
         navController = navController,
-        onRefresh = { viewModel.getData() }
+        onRefresh = { viewModel.getData() },
+        onUploadClick = { launcher.launch("image/*") }
     )
 }
 
@@ -69,14 +88,16 @@ fun ProfileScreen(
 private fun ProfileScreenContent(
     state: ProfileState,
     navController: NavHostController,
-    onRefresh: () -> Unit
+    onRefresh: () -> Unit,
+    onUploadClick: () -> Unit
 ) {
     when (state) {
         is ProfileState.Loading -> ProfileStateLoading()
         is ProfileState.Error -> ProfileStateError(state, onRefresh = onRefresh)
         is ProfileState.Content -> ProfileStateContent(
             state = state,
-            navController = navController
+            navController = navController,
+            onUploadClick = onUploadClick
         )
     }
 }
@@ -85,7 +106,8 @@ private fun ProfileScreenContent(
 @Composable
 private fun ProfileStateContent(
     state: ProfileState.Content,
-    navController: NavHostController
+    navController: NavHostController,
+    onUploadClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -152,8 +174,8 @@ private fun ProfileStateContent(
                 Box(
                     contentAlignment = Alignment.BottomEnd
                 ) {
-                    ProfilePicture(imageVector = Icons.Filled.Person)
-                    ChangePFP()
+                    ProfilePicture(url = state.pfpUrl)
+                    ChangePFP(onClick = onUploadClick)
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -239,7 +261,8 @@ fun ProfileScreenPreview() {
                 email = "user1@test.ru"
             ),
             navController = rememberNavController(),
-            onRefresh = {}
+            onRefresh = {},
+            onUploadClick = {}
         )
     }
 }

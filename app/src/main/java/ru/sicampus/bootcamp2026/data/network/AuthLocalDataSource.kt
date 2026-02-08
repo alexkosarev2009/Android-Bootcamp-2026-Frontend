@@ -35,6 +35,7 @@ object AuthLocalDataSource {
         private set(value) {
             Log.d("AuthLocalDataSource", "Setting token: $value")
             _token = value
+            Network.resetClient()
             GlobalScope.launch(Dispatchers.IO) {
                 appContext?.dataStore?.edit { it[TOKEN_KEY] = value ?: "" }
             }

@@ -436,41 +436,35 @@ fun DayCalendarView(
 
         val dayMeetings = meetings.filter { it.date == selectedDate }.sortedBy { it.startHour }
         
-        for (hour in 8..20) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+        if (dayMeetings.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = String.format("%02d:00", hour),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
-                val meetingAtHour = dayMeetings.find { it.startHour == hour }
-                if (meetingAtHour != null) {
-                    ScheduleCard(
-                        title = meetingAtHour.title,
-                        organizer = meetingAtHour.organizerId.toString(),
-                        date = "",
-                        time = "${meetingAtHour.startHour}:00"
+                Text("На этот день встреч не запланировано", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        } else {
+            dayMeetings.forEach { meeting ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = String.format("%02d:00", meeting.startHour),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                            .padding(8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Свободно", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f), fontSize = 12.sp)
-                    }
+                    
+                    ScheduleCard(
+                        title = meeting.title,
+                        organizer = meeting.organizerId.toString(),
+                        date = "",
+                        time = "${meeting.startHour}:00"
+                    )
                 }
             }
         }
