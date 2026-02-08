@@ -34,26 +34,4 @@ class ProfileStateModel : ViewModel() {
             }
         }
     }
-
-    fun updateName(newName: String) {
-        _uiState.update { state ->
-            if (state is ProfileState.Content) {
-                state.copy(fullName = newName)
-            } else state
-        }
-    }
-
-    fun saveProfile() {
-        val currentState = _uiState.value
-        if (currentState is ProfileState.Content) {
-            viewModelScope.launch {
-                try {
-                    authApiService.updateUser(currentState.fullName)
-                    getData()
-                } catch (e: Exception) {
-                    _uiState.update { ProfileState.Error(e.message ?: "Ошибка при сохранении") }
-                }
-            }
-        }
-    }
 }
